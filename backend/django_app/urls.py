@@ -6,12 +6,14 @@ def hello_world(request):
     names = request.GET.getlist('name')
     lang = request.GET.get('lang', 'en')
 
+    if not all(name.isalpha() for name in names):
+        return HttpResponse('You must enter a valid name', status=400)
+    
     names = ', '.join(names)
     if not names:
         names = 'World'
     
-    if not names.isalpha():
-        return HttpResponse('You must enter a valid name', status=400)
+    
     if lang == 'es':
         return HttpResponse(f'Hola, {names}!')
     elif lang == 'fr':
@@ -26,7 +28,3 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('hello/', hello_world),
 ]
-
-handler404 = custom_404
-
-
